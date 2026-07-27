@@ -23,7 +23,8 @@ const clerkWebhooks = async (req, res) => {
                     photo: data.image_url,
                 }
                 await User.create(userData);
-                res.status({});
+                console.log("Usuário salvo no Mongo");
+                return res.status(200);
                 
                 break;
             }
@@ -40,7 +41,7 @@ const clerkWebhooks = async (req, res) => {
                     clerkId: data.id}, 
                     userData
                 );
-                res.status({});
+                return res.status(200);
                 
                 break;
             }
@@ -49,12 +50,12 @@ const clerkWebhooks = async (req, res) => {
                 await User.findOneAndDelete({
                     clerkId: data.id,
                 });
-                res.status({});
+                return res.status(200);
                 
                 break;
             }
             default:
-                res.status(200)
+                return res.status(200).json({ message: "Webhook default" });
                 break;
         };
 
