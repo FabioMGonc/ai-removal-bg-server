@@ -1,9 +1,10 @@
 //import "./configs/dnstext.js";
-import express from 'express';
+import express from "express";
 import "dotenv/config";
-import cors from 'cors';
-import conectDB from './configs/mongodb.js';
-import userRouter from './routes/userRoutes.js';
+import cors from "cors";
+import conectDB from "./configs/mongodb.js";
+import userRouter from "./routes/userRoutes.js";
+import imageRouter from "./routes/imageRoutes.js";
 
 const PORT = process.env.PORT || 3000;
 
@@ -18,6 +19,8 @@ app.get('/', (req, res) => {
 });
 
 app.use("/api/user", userRouter);
+app.use("/api/image", imageRouter);
+
 
 
 app.listen(PORT, () => {console.log(`Server is running on port ${PORT}`)});

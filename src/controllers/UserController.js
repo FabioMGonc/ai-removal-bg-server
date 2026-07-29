@@ -24,9 +24,8 @@ const clerkWebhooks = async (req, res) => {
                 }
                 await User.create(userData);
                 console.log("Usuário salvo no Mongo");
-                return res.status(200);
+                return res.sendStatus(200);
                 
-                break;
             }
 
             case "user.updated": {
@@ -37,26 +36,24 @@ const clerkWebhooks = async (req, res) => {
                     photo: data.image_url,
                 }
 
-                await User.findOneAndUpdate({
-                    clerkId: data.id}, 
-                    userData
+                await User.findOneAndUpdate(
+                    { clerkId: data.id }, 
+                    { $set:userData }
                 );
-                return res.status(200);
+                return res.sendStatus(200);
                 
-                break;
             }
 
             case "user.deleted": {
                 await User.findOneAndDelete({
                     clerkId: data.id,
                 });
-                return res.status(200);
+                return res.sendStatus(200);
                 
-                break;
             }
             default:
                 return res.status(200).json({ message: "Webhook default" });
-                break;
+                
         };
 
     } catch (error) {
@@ -66,4 +63,20 @@ const clerkWebhooks = async (req, res) => {
 
 }
 
-export default clerkWebhooks;
+const userCredits = async (req, res) => {
+    try {
+        const { clerkId } = req;
+        const userData = await User.findOne({ clerkId });
+        if (!userData) {
+            return res.json({ success: false, message: "Usuário não encontrado",
+            });
+        }
+        res.json({success: true, credits: userData.creditBalance});
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(400).send(error.message);
+    }
+}
+
+export { clerkWebhooks, userCredits };
